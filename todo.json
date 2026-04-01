@@ -1,0 +1,969 @@
+{
+  "phases": [
+    {
+      "id": "phase-1",
+      "name": "Phase 1: Secure VM Lifecycle",
+      "components": [
+        {
+          "id": "phase-1.wiring-layer",
+          "name": "Wiring Layer (Component 0)",
+          "tasks": [
+            {
+              "id": "phase-1.wiring-layer.config-loading",
+              "content": "Implement Config loading and validation",
+              "status": "in_progress",
+              "priority": "high",
+              "blockedBy": []
+            },
+            {
+              "id": "phase-1.wiring-layer.assemble",
+              "content": "Implement Assemble() function with interface wiring",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-1.wiring-layer.config-loading"
+              ]
+            },
+            {
+              "id": "phase-1.wiring-layer.migrations",
+              "content": "Implement SQLite migration runner and directory structure",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": []
+            },
+            {
+              "id": "phase-1.wiring-layer.concurrency",
+              "content": "Implement concurrency serialization (per-session mutexes)",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": []
+            },
+            {
+              "id": "phase-1.wiring-layer.rollback",
+              "content": "Implement rollback failure handling",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": []
+            }
+          ]
+        },
+        {
+          "id": "phase-1.vm-manager",
+          "name": "VM Manager (Component 1)",
+          "tasks": [
+            {
+              "id": "phase-1.vm-manager.libvirt-interface",
+              "content": "Define LibvirtClient interface and shell-out fallback",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": []
+            },
+            {
+              "id": "phase-1.vm-manager.image-management",
+              "content": "Implement image import/list/inspect/delete",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-1.vm-manager.libvirt-interface"
+              ]
+            },
+            {
+              "id": "phase-1.vm-manager.overlay-disk",
+              "content": "Implement overlay disk creation (qcow2 copy-on-write)",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-1.vm-manager.image-management"
+              ]
+            },
+            {
+              "id": "phase-1.vm-manager.cloud-init",
+              "content": "Implement cloud-init seed ISO generation",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": []
+            },
+            {
+              "id": "phase-1.vm-manager.domain-xml",
+              "content": "Implement domain XML generation with typed struct",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-1.vm-manager.libvirt-interface"
+              ]
+            },
+            {
+              "id": "phase-1.vm-manager.lifecycle",
+              "content": "Implement VM start/stop/destroy lifecycle",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-1.vm-manager.domain-xml",
+                "phase-1.vm-manager.overlay-disk",
+                "phase-1.vm-manager.cloud-init"
+              ]
+            },
+            {
+              "id": "phase-1.vm-manager.state-query",
+              "content": "Implement VM state query and connection info",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-1.vm-manager.lifecycle"
+              ]
+            },
+            {
+              "id": "phase-1.vm-manager.reconciliation",
+              "content": "Implement VM reconciliation and orphan reporting",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-1.vm-manager.libvirt-interface"
+              ]
+            },
+            {
+              "id": "phase-1.vm-manager.domain-xml-example",
+              "content": "Add domain.xml struct example to LLD",
+              "status": "todo",
+              "priority": "low",
+              "blockedBy": [
+                "phase-1.vm-manager.domain-xml"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "phase-1.observability-core",
+          "name": "Observability - Core (Component 7)",
+          "tasks": [
+            {
+              "id": "phase-1.observability-core.structured-logging",
+              "content": "Implement structured logging with correlation IDs",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": []
+            },
+            {
+              "id": "phase-1.observability-core.audit-store",
+              "content": "Implement SQLite audit event store with WAL mode",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-1.wiring-layer.migrations"
+              ]
+            },
+            {
+              "id": "phase-1.observability-core.audit-persistence",
+              "content": "Implement audit event persistence and query",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-1.observability-core.audit-store"
+              ]
+            },
+            {
+              "id": "phase-1.observability-core.logging-audit-semantics",
+              "content": "Add logging vs audit failure semantics",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-1.observability-core.structured-logging",
+                "phase-1.observability-core.audit-persistence"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "name": "Phase 2: Session Model",
+      "components": [
+        {
+          "id": "phase-2.shared-folder",
+          "name": "Shared Folder Manager (Component 5)",
+          "tasks": [
+            {
+              "id": "phase-2.shared-folder.host-directory",
+              "content": "Implement per-session host directory creation (0700)",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": []
+            },
+            {
+              "id": "phase-2.shared-folder.virtiofs-detection",
+              "content": "Implement virtiofs detection (via libvirt capabilities)",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-1.vm-manager.libvirt-interface"
+              ]
+            },
+            {
+              "id": "phase-2.shared-folder.9p-fallback",
+              "content": "Implement 9p fallback mechanism",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-2.shared-folder.virtiofs-detection"
+              ]
+            },
+            {
+              "id": "phase-2.shared-folder.mount-config",
+              "content": "Implement mount config injection for cloud-init",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-2.shared-folder.virtiofs-detection",
+                "phase-1.vm-manager.cloud-init"
+              ]
+            },
+            {
+              "id": "phase-2.shared-folder.path-traversal",
+              "content": "Implement path traversal prevention",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-2.shared-folder.host-directory"
+              ]
+            },
+            {
+              "id": "phase-2.shared-folder.cleanup",
+              "content": "Implement mount cleanup on destroy",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-2.shared-folder.host-directory"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "phase-2.auth-proxy",
+          "name": "Auth Proxy Manager (Component 4)",
+          "tasks": [
+            {
+              "id": "phase-2.auth-proxy.session-start",
+              "content": "Implement per-session proxy start (virtio-vsock)",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": []
+            },
+            {
+              "id": "phase-2.auth-proxy.identity-validation",
+              "content": "Implement session identity validation",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-2.auth-proxy.session-start"
+              ]
+            },
+            {
+              "id": "phase-2.auth-proxy.credential-replacement",
+              "content": "Implement dummy-to-real credential replacement",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-2.auth-proxy.identity-validation"
+              ]
+            },
+            {
+              "id": "phase-2.auth-proxy.request-forwarding",
+              "content": "Implement request forwarding and response passthrough",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-2.auth-proxy.credential-replacement"
+              ]
+            },
+            {
+              "id": "phase-2.auth-proxy.apikey-sensitive",
+              "content": "Add APIKey Sensitive type wrapper",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": []
+            },
+            {
+              "id": "phase-2.auth-proxy.vsock-fallback",
+              "content": "Implement VSOCK fallback (bridge IP + iptables)",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-2.auth-proxy.session-start"
+              ]
+            },
+            {
+              "id": "phase-2.auth-proxy.env-injection",
+              "content": "Define env var injection contract for cloud-init",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-1.vm-manager.cloud-init"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "phase-2.session-manager",
+          "name": "Session Manager (Component 2)",
+          "tasks": [
+            {
+              "id": "phase-2.session-manager.create-session",
+              "content": "Implement CreateSession with orchestration",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-1.vm-manager.lifecycle",
+                "phase-2.shared-folder.mount-config",
+                "phase-2.auth-proxy.request-forwarding"
+              ]
+            },
+            {
+              "id": "phase-2.session-manager.state-machine",
+              "content": "Implement session state machine (requested\u2192creating\u2192running\u2192stopping\u2192destroyed/error)",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-2.session-manager.create-session"
+              ]
+            },
+            {
+              "id": "phase-2.session-manager.rollback",
+              "content": "Implement rollback on provisioning failure",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-2.session-manager.state-machine",
+                "phase-1.wiring-layer.rollback"
+              ]
+            },
+            {
+              "id": "phase-2.session-manager.stop-destroy",
+              "content": "Implement stop/destroy with force option",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-2.session-manager.state-machine"
+              ]
+            },
+            {
+              "id": "phase-2.session-manager.sqlite-persistence",
+              "content": "Implement SQLite persistence",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-1.wiring-layer.migrations"
+              ]
+            },
+            {
+              "id": "phase-2.session-manager.list-query",
+              "content": "Implement session list/query",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-2.session-manager.sqlite-persistence"
+              ]
+            },
+            {
+              "id": "phase-2.session-manager.connection-info",
+              "content": "Implement connection info exposure",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-1.vm-manager.state-query"
+              ]
+            },
+            {
+              "id": "phase-2.session-manager.rename-connection-info",
+              "content": "Rename ConnectionInfo to SessionConnectionInfo",
+              "status": "todo",
+              "priority": "low",
+              "blockedBy": [
+                "phase-2.session-manager.connection-info"
+              ]
+            },
+            {
+              "id": "phase-2.session-manager.concurrency-strategy",
+              "content": "Add concurrency serialization strategy",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-1.wiring-layer.concurrency"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "phase-2.observability-health",
+          "name": "Observability - Health (Component 7)",
+          "tasks": [
+            {
+              "id": "phase-2.observability-health.host-health",
+              "content": "Implement host health check endpoint",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": []
+            },
+            {
+              "id": "phase-2.observability-health.session-health",
+              "content": "Implement per-session health check",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-2.session-manager.state-machine"
+              ]
+            },
+            {
+              "id": "phase-2.observability-health.aggregation",
+              "content": "Implement health status aggregation",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-2.observability-health.host-health",
+                "phase-2.observability-health.session-health"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-3",
+      "name": "Phase 3: Public Control Plane",
+      "components": [
+        {
+          "id": "phase-3.rest-api",
+          "name": "REST API (Component 6)",
+          "tasks": [
+            {
+              "id": "phase-3.rest-api.sessions-crud",
+              "content": "Implement sessions CRUD endpoints",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-2.session-manager.create-session",
+                "phase-2.session-manager.stop-destroy"
+              ]
+            },
+            {
+              "id": "phase-3.rest-api.images-crud",
+              "content": "Implement images CRUD endpoints",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-1.vm-manager.image-management"
+              ]
+            },
+            {
+              "id": "phase-3.rest-api.network-policy-query",
+              "content": "Implement network policy query endpoints",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": []
+            },
+            {
+              "id": "phase-3.rest-api.proxy-status",
+              "content": "Implement proxy status endpoint",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-2.auth-proxy.request-forwarding"
+              ]
+            },
+            {
+              "id": "phase-3.rest-api.shared-folder-status",
+              "content": "Implement shared-folder status endpoint",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-2.shared-folder.mount-config"
+              ]
+            },
+            {
+              "id": "phase-3.rest-api.audit-query",
+              "content": "Implement audit log query endpoint",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-1.observability-core.audit-persistence"
+              ]
+            },
+            {
+              "id": "phase-3.rest-api.health-capacity",
+              "content": "Implement host health/capacity endpoint",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-2.observability-health.host-health"
+              ]
+            },
+            {
+              "id": "phase-3.rest-api.capabilities",
+              "content": "Implement capabilities endpoint",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": []
+            },
+            {
+              "id": "phase-3.rest-api.authentication",
+              "content": "Implement authentication on mutating endpoints",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": []
+            },
+            {
+              "id": "phase-3.rest-api.authorization",
+              "content": "Implement authorization enforcement",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-3.rest-api.authentication"
+              ]
+            },
+            {
+              "id": "phase-3.rest-api.request-validation",
+              "content": "Implement request body validation rules",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": []
+            },
+            {
+              "id": "phase-3.rest-api.async-creation",
+              "content": "Implement 202 Accepted for async session creation",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-3.rest-api.sessions-crud"
+              ]
+            },
+            {
+              "id": "phase-3.rest-api.session-logs",
+              "content": "Implement /v1/sessions/{id}/logs endpoint",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-3.rest-api.sessions-crud"
+              ]
+            },
+            {
+              "id": "phase-3.rest-api.auth-matrix",
+              "content": "Add per-endpoint auth matrix",
+              "status": "todo",
+              "priority": "low",
+              "blockedBy": [
+                "phase-3.rest-api.authorization"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "phase-3.observability-external",
+          "name": "Observability - External (Component 7)",
+          "tasks": [
+            {
+              "id": "phase-3.observability-external.prometheus",
+              "content": "Implement Prometheus /metrics endpoint",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": []
+            },
+            {
+              "id": "phase-3.observability-external.log-levels",
+              "content": "Implement configurable log levels",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-1.observability-core.structured-logging"
+              ]
+            },
+            {
+              "id": "phase-3.observability-external.timing-metrics",
+              "content": "Implement timing metrics emission",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-3.observability-external.prometheus"
+              ]
+            },
+            {
+              "id": "phase-3.observability-external.metrics-interface",
+              "content": "Fix metrics interface to use Prometheus conventions",
+              "status": "todo",
+              "priority": "low",
+              "blockedBy": [
+                "phase-3.observability-external.prometheus"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-4",
+      "name": "Phase 4: Network Isolation",
+      "components": [
+        {
+          "id": "phase-4.network-policy",
+          "name": "Network Policy Engine (Component 3)",
+          "tasks": [
+            {
+              "id": "phase-4.network-policy.session-creation",
+              "content": "Implement policy application at session creation",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-2.session-manager.create-session"
+              ]
+            },
+            {
+              "id": "phase-4.network-policy.modes",
+              "content": "Implement strict/restricted/permissive modes",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-4.network-policy.session-creation"
+              ]
+            },
+            {
+              "id": "phase-4.network-policy.host-isolation",
+              "content": "Implement host isolation rules (VM\u2192host blocked)",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-4.network-policy.modes"
+              ]
+            },
+            {
+              "id": "phase-4.network-policy.ip-cidr",
+              "content": "Implement allow/block at IP/CIDR granularity",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-4.network-policy.modes"
+              ]
+            },
+            {
+              "id": "phase-4.network-policy.dns-policy",
+              "content": "Implement DNS-name based policy",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-4.network-policy.ip-cidr"
+              ]
+            },
+            {
+              "id": "phase-4.network-policy.runtime-mutation",
+              "content": "Implement runtime policy mutation (allow/block/reset)",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-4.network-policy.ip-cidr"
+              ]
+            },
+            {
+              "id": "phase-4.network-policy.rule-cleanup",
+              "content": "Implement rule cleanup on destroy",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-4.network-policy.session-creation"
+              ]
+            },
+            {
+              "id": "phase-4.network-policy.iptables-nftables",
+              "content": "Implement iptables/nftables rule generation",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-4.network-policy.modes"
+              ]
+            },
+            {
+              "id": "phase-4.network-policy.reconciliation",
+              "content": "Implement network reconciliation on startup",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-4.network-policy.iptables-nftables"
+              ]
+            },
+            {
+              "id": "phase-4.network-policy.firewall-backend",
+              "content": "Separate FirewallBackend interface",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-4.network-policy.iptables-nftables"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-5",
+      "name": "Phase 5: Resource Enforcement & Reconciliation",
+      "components": [
+        {
+          "id": "phase-5.host-resource",
+          "name": "Host Resource Manager (Component 8)",
+          "tasks": [
+            {
+              "id": "phase-5.host-resource.cgroups-slice",
+              "content": "Implement cgroups v2 slice creation per session",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": []
+            },
+            {
+              "id": "phase-5.host-resource.cpu-limits",
+              "content": "Implement CPU limits enforcement",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-5.host-resource.cgroups-slice"
+              ]
+            },
+            {
+              "id": "phase-5.host-resource.memory-limits",
+              "content": "Implement memory limits enforcement",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-5.host-resource.cgroups-slice"
+              ]
+            },
+            {
+              "id": "phase-5.host-resource.pid-limits",
+              "content": "Implement PID limits enforcement",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-5.host-resource.cgroups-slice"
+              ]
+            },
+            {
+              "id": "phase-5.host-resource.io-limits",
+              "content": "Implement I/O limits enforcement (device lookup strategy)",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-5.host-resource.cgroups-slice"
+              ]
+            },
+            {
+              "id": "phase-5.host-resource.admission-control",
+              "content": "Implement capacity admission control",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-5.host-resource.cpu-limits",
+                "phase-5.host-resource.memory-limits"
+              ]
+            },
+            {
+              "id": "phase-5.host-resource.platform-reconciliation",
+              "content": "Implement full platform reconciliation on startup",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-5.host-resource.cgroups-slice",
+                "phase-1.vm-manager.reconciliation",
+                "phase-4.network-policy.reconciliation"
+              ]
+            },
+            {
+              "id": "phase-5.host-resource.host-resources",
+              "content": "Implement host resources exposure",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-5.host-resource.admission-control"
+              ]
+            },
+            {
+              "id": "phase-5.host-resource.cgroup-sanitization",
+              "content": "Implement cgroup path sanitization",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-5.host-resource.cgroups-slice"
+              ]
+            },
+            {
+              "id": "phase-5.host-resource.assign-process-race",
+              "content": "Mitigate AssignProcess race condition",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-5.host-resource.cgroups-slice"
+              ]
+            },
+            {
+              "id": "phase-5.host-resource.reconciliation-coordinator",
+              "content": "Define single reconciliation coordinator",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-5.host-resource.platform-reconciliation"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "phase-5.reconciliation-cross-cutting",
+          "name": "Reconciliation Cross-Cutting",
+          "tasks": [
+            {
+              "id": "phase-5.reconciliation.unify-reports",
+              "content": "Unify OrphanReport and ReconcileReport",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-1.vm-manager.reconciliation",
+                "phase-4.network-policy.reconciliation"
+              ]
+            },
+            {
+              "id": "phase-5.reconciliation.console-logs",
+              "content": "Implement VM console log capture (virDomainOpenConsole)",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-1.vm-manager.libvirt-interface"
+              ]
+            },
+            {
+              "id": "phase-5.reconciliation.audit-purge",
+              "content": "Implement audit retention purge (90-day default)",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-1.observability-core.audit-persistence"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-6",
+      "name": "Phase 6: Security & Production Readiness",
+      "components": [
+        {
+          "id": "phase-6.security-hardening",
+          "name": "Security Hardening",
+          "tasks": [
+            {
+              "id": "phase-6.security.selinux-svirt",
+              "content": "Validate SELinux/sVirt configuration",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": []
+            },
+            {
+              "id": "phase-6.security.red-team",
+              "content": "Implement red-team test plan",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-6.security.selinux-svirt"
+              ]
+            },
+            {
+              "id": "phase-6.security.hardening-guide",
+              "content": "Document operator hardening guidance",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-6.security.red-team"
+              ]
+            },
+            {
+              "id": "phase-6.security.rate-limiting",
+              "content": "Implement rate limiting (ADR)",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-3.rest-api.authentication"
+              ]
+            },
+            {
+              "id": "phase-6.security.https",
+              "content": "Implement HTTPS configuration",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": []
+            }
+          ]
+        },
+        {
+          "id": "phase-6.final-integration",
+          "name": "Final Integration",
+          "tasks": [
+            {
+              "id": "phase-6.integration.e2e-flow",
+              "content": "End-to-end session creation/destroy flow",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-2.session-manager.create-session",
+                "phase-2.session-manager.stop-destroy",
+                "phase-3.rest-api.sessions-crud"
+              ]
+            },
+            {
+              "id": "phase-6.integration.crash-recovery",
+              "content": "Crash recovery and reconciliation testing",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-5.host-resource.platform-reconciliation"
+              ]
+            },
+            {
+              "id": "phase-6.integration.performance",
+              "content": "Performance benchmarking (latency, throughput)",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-6.integration.e2e-flow"
+              ]
+            },
+            {
+              "id": "phase-6.integration.penetration",
+              "content": "Security penetration testing",
+              "status": "todo",
+              "priority": "high",
+              "blockedBy": [
+                "phase-6.security.red-team"
+              ]
+            },
+            {
+              "id": "phase-6.integration.dashboards",
+              "content": "Metrics dashboards setup",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-3.observability-external.prometheus"
+              ]
+            },
+            {
+              "id": "phase-6.integration.runbook",
+              "content": "Operational runbook documentation",
+              "status": "todo",
+              "priority": "medium",
+              "blockedBy": [
+                "phase-6.integration.crash-recovery"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "current_phase": "phase-1",
+    "current_task": "phase-1.wiring-layer.config-loading"
+  }
+}
